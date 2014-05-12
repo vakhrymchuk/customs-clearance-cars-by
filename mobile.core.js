@@ -67,6 +67,48 @@
     };
 
     /**
+     * Рассчет таможенных платежей для новых машин
+     * @param vehicle
+     */
+    function calcForNew(vehicle) {
+        // для < 8500
+        var factor = {
+            price: 0.54,
+            displacement: 2.5
+        };
+
+        if (vehicle.priceGross > 8500) {
+            factor.price = 0.48;
+            if (vehicle.priceGross <= 16700) {
+                factor.displacement = 3.5;
+            } else if (vehicle.priceGross <= 42300) {
+                factor.displacement = 5.5;
+            } else if (vehicle.priceGross <= 84500) {
+                factor.displacement = 7.5;
+            } else if (vehicle.priceGross <= 169000) {
+                factor.displacement = 15;
+            } else {
+                factor.displacement = 20;
+            }
+        }
+
+        var percentFromPrice = factor.price * vehicle.priceGross;
+        var priceForDisplacement = factor.displacement * vehicle.displacement;
+
+        return Math.max(percentFromPrice, priceForDisplacement);
+    }
+
+    /**
+     * Рассчет таможенных платежей
+     * @param vehicle
+     */
+    this.calcCustomsClearance = function (vehicle) {
+        if (vehicle.age < 3) {
+            vehicle.customsClearance = calcForNew(vehicle);
+        }
+    };
+
+    /**
      * Страница поиска
      */
     if (this.isMatchUrl("/auto-inserat/")) {
@@ -96,6 +138,8 @@
 
         var dd = $("div.technicalDetailsColumn dt:contains('Объем двигателя:')").next("dd");
         vehicle.displacement = this.parseIntFromStr(dd.text());
+
+        this.calcCustomsClearance(vehicle);
 
         console.log(vehicle);
 
