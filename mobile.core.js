@@ -1,5 +1,7 @@
 (function MobileCore() {
 
+    this.EUR_TO_USD = 1.4;
+
     /**
      * Страница подходит под урл?
      * @param url
@@ -121,15 +123,39 @@
     }
 
     /**
+     * Рассчет таможенных платежей для машин старше 5 лет
+     * @param vehicle
+     */
+    function calcForOld(vehicle) {
+        var factor;
+        if (vehicle.displacement < 1000) {
+            factor = 3;
+        } else if (vehicle.displacement <= 1500) {
+            factor = 3.2;
+        } else if (vehicle.displacement <= 1800) {
+            factor = 3.5;
+        } else if (vehicle.displacement <= 2300) {
+            factor = 4.8;
+        } else if (vehicle.displacement <= 3000) {
+            factor = 5;
+        } else {
+            factor = 5.7;
+        }
+        return factor * vehicle.displacement;
+    }
+
+    /**
      * Рассчет таможенных платежей
      * @param vehicle
      */
     this.calcCustomsClearance = function (vehicle) {
         if (vehicle.age < 3) {
-            vehicle.customsClearance = calcForNew(vehicle);
-        } else if (vehicle.age < 5) {
-            vehicle.customsClearance = calcForSecond(vehicle);
+            return calcForNew(vehicle);
         }
+        if (vehicle.age < 5) {
+            return calcForSecond(vehicle);
+        }
+        return calcForOld(vehicle);
     };
 
     /**
@@ -163,7 +189,12 @@
         var dd = $("div.technicalDetailsColumn dt:contains('Объем двигателя:')").next("dd");
         vehicle.displacement = this.parseIntFromStr(dd.text());
 
-        this.calcCustomsClearance(vehicle);
+        vehicle.customsClearance = this.calcCustomsClearance(vehicle);
+
+        vehicleDetails.append("<p>Таможенные пошлины: <b>" + vehicle.customsClearance + " EUR</b></p>");
+        vehicle.eur = vehicle.priceGross + vehicle.customsClearance;
+        vehicle.usd = (vehicle.eur * this.EUR_TO_USD).toFixed(0);
+        vehicleDetails.append("<p>ИТОГО: <b>" + vehicle.eur + " EUR (" + vehicle.usd + "$)</b></p>");
 
         console.log(vehicle);
 
