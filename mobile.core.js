@@ -94,6 +94,9 @@
 
         date.append(" <b>(" + vehicle.age + " г.)<b>");
 
+        var dd = $("div.technicalDetailsColumn dt:contains('Объем двигателя:')").next("dd");
+        vehicle.displacement = this.parseIntFromStr(dd.text());
+
         console.log(vehicle);
 
     }
