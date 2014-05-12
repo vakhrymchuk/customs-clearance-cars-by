@@ -64,6 +64,14 @@
         var priceNet = vehicleDetails.find("p.priceSecondaryCountryOfSale.priceNet");
         vehicle.priceNet = this.getPrice(priceNet.text());
 
+        var date = vehicleDetails.find("p:contains('П.р.')");
+        var execDate = /(\d+)\/(\d+)/.exec(date.text());
+
+        vehicle.date = {
+            month: parseInt(execDate[1]),
+            year: parseInt(execDate[2])
+        };
+
         console.log(vehicle);
 
     }
