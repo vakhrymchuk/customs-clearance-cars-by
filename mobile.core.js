@@ -39,10 +39,33 @@
     };
 
     /**
+     * Вырезает стоимость из строки
+     * @param text
+     * @returns {Number}
+     */
+    this.getPrice = function (text) {
+        text = text.replace(/\s/, '');
+        return this.parseIntFromStr(text);
+    };
+
+    /**
      * Страница поиска
      */
     if (this.isMatchUrl("/auto-inserat/")) {
         console.log("auto-inserat");
+
+        var vehicle = {};
+
+        var vehicleDetails = $('div.vehicleDetails:first');
+
+        var priceGross = vehicleDetails.find("p.pricePrimaryCountryOfSale.priceGross");
+        vehicle.priceGross = this.getPrice(priceGross.text());
+
+        var priceNet = vehicleDetails.find("p.priceSecondaryCountryOfSale.priceNet");
+        vehicle.priceNet = this.getPrice(priceNet.text());
+
+        console.log(vehicle);
+
     }
 
 })();
