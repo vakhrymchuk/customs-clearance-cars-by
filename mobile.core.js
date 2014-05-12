@@ -49,6 +49,24 @@
     };
 
     /**
+     * Рассчитываем возраст
+     * @param vehicle
+     */
+    this.calcAge = function (vehicle) {
+        var date = new Date();
+        var now = {
+            month: date.getMonth() + 1,
+            year: date.getFullYear()
+        };
+
+        var years = now.year - vehicle.date.year;
+        var months = now.month - vehicle.date.month;
+        var age = years * 12 + months;
+        vehicle.age = (age / 12).toFixed(1);
+
+    };
+
+    /**
      * Страница поиска
      */
     if (this.isMatchUrl("/auto-inserat/")) {
@@ -71,6 +89,10 @@
             month: parseInt(execDate[1]),
             year: parseInt(execDate[2])
         };
+
+        this.calcAge(vehicle);
+
+        date.append(" <b>(" + vehicle.age + " г.)<b>");
 
         console.log(vehicle);
 
