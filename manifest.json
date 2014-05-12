@@ -1,0 +1,20 @@
+{
+    "name": "Mobile Customs Clearance for Belarus",
+    "description": "Mobile Customs Clearance for Belarus",
+    "version": "0.1",
+    "content_scripts": [
+        {
+            "js": [
+                "jquery-2.0.3.min.js",
+                "mobile.core.js"
+            ],
+            "matches": ["http://suchen.mobile.de/*"],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
+    "web_accessible_resources": ["jquery-2.0.3.min.map"],
+    "permissions": ["http://suchen.mobile.de/*"],
+    "update_url": "http://mobilede.vacuk.com/updates.xml",
+    "manifest_version": 2
+}
