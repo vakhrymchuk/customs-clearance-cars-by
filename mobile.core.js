@@ -99,12 +99,36 @@
     }
 
     /**
+     * Рассчет таможенных платежей для машин от 3 до 5 лет
+     * @param vehicle
+     */
+    function calcForSecond(vehicle) {
+        var factor;
+        if (vehicle.displacement < 1000) {
+            factor = 1.5;
+        } else if (vehicle.displacement <= 1500) {
+            factor = 1.7;
+        } else if (vehicle.displacement <= 1800) {
+            factor = 2.5;
+        } else if (vehicle.displacement <= 2300) {
+            factor = 2.7;
+        } else if (vehicle.displacement <= 3000) {
+            factor = 3;
+        } else {
+            factor = 3.6;
+        }
+        return factor * vehicle.displacement;
+    }
+
+    /**
      * Рассчет таможенных платежей
      * @param vehicle
      */
     this.calcCustomsClearance = function (vehicle) {
         if (vehicle.age < 3) {
             vehicle.customsClearance = calcForNew(vehicle);
+        } else if (vehicle.age < 5) {
+            vehicle.customsClearance = calcForSecond(vehicle);
         }
     };
 
