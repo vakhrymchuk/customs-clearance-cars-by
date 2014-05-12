@@ -159,6 +159,16 @@
     };
 
     /**
+     * Форматированный вывод денег
+     * @param price
+     * @returns {string}
+     */
+    function formatPrice(price) {
+        var re = '\\d(?=(\\d{3})+$)';
+        return price.toFixed(0).replace(new RegExp(re, 'g'), '$& ');
+    }
+
+    /**
      * Страница поиска
      */
     if (this.isMatchUrl("/auto-inserat/")) {
@@ -189,12 +199,13 @@
         var dd = $("div.technicalDetailsColumn dt:contains('Объем двигателя:')").next("dd");
         vehicle.displacement = this.parseIntFromStr(dd.text());
 
-        vehicle.customsClearance = this.calcCustomsClearance(vehicle);
+        vehicle.customsClearance = Math.round(this.calcCustomsClearance(vehicle));
 
-        vehicleDetails.append("<p>Таможенные пошлины: <b>" + vehicle.customsClearance + " EUR</b></p>");
+        vehicleDetails.append("<p>Таможенные пошлины: <b>" + formatPrice(vehicle.customsClearance) + " EUR</b></p>");
+
         vehicle.eur = vehicle.priceGross + vehicle.customsClearance;
-        vehicle.usd = (vehicle.eur * this.EUR_TO_USD).toFixed(0);
-        vehicleDetails.append("<p>ИТОГО: <b>" + vehicle.eur + " EUR (" + vehicle.usd + "$)</b></p>");
+        vehicle.usd = Math.round(vehicle.eur * this.EUR_TO_USD);
+        vehicleDetails.append("<p style='font-size: 16px;'><b>" + formatPrice(vehicle.eur) + " EUR (" + formatPrice(vehicle.usd) + " $)</b></p>");
 
         console.log(vehicle);
 
