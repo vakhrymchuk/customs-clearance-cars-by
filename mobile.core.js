@@ -169,6 +169,15 @@
     }
 
     /**
+     * Выводим итоговую сумму
+     */
+    this.showResultPrice = function (vehicle, price) {
+        vehicle.eur = price + vehicle.customsClearance;
+        vehicle.usd = Math.round(vehicle.eur * this.EUR_TO_USD);
+        vehicleDetails.append("<p style='font-size: 16px;'><b>" + formatPrice(vehicle.eur) + " EUR (" + formatPrice(vehicle.usd) + " $)</b></p>");
+    };
+
+    /**
      * Страница поиска
      */
     if (this.isMatchUrl("/auto-inserat/")) {
@@ -203,9 +212,11 @@
 
         vehicleDetails.append("<p>Таможенные пошлины: <b>" + formatPrice(vehicle.customsClearance) + " EUR</b></p>");
 
-        vehicle.eur = vehicle.priceGross + vehicle.customsClearance;
-        vehicle.usd = Math.round(vehicle.eur * this.EUR_TO_USD);
-        vehicleDetails.append("<p style='font-size: 16px;'><b>" + formatPrice(vehicle.eur) + " EUR (" + formatPrice(vehicle.usd) + " $)</b></p>");
+        this.showResultPrice(vehicle, vehicle.priceGross);
+
+        if (vehicle.priceNet > 0) {
+            this.showResultPrice(vehicle, vehicle.priceNet);
+        }
 
         console.log(vehicle);
 
