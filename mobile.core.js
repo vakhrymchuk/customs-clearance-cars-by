@@ -180,7 +180,7 @@
     /**
      * Страница поиска
      */
-    if (this.isMatchUrl("/auto-inserat/")) {
+    if (this.isMatchUrl("/auto-inserat/") || this.isMatchUrl("/fahrzeuge/")) {
         console.log("auto-inserat");
 
         var vehicle = {};
@@ -193,7 +193,7 @@
         var priceNet = vehicleDetails.find("p.priceSecondaryCountryOfSale.priceNet");
         vehicle.priceNet = this.getPrice(priceNet.text());
 
-        var date = vehicleDetails.find("p:contains('П.р.')");
+        var date = vehicleDetails.find("p:contains('П.р.')").add("p:contains('FR')");
         var execDate = /(\d+)\/(\d+)/.exec(date.text());
 
         vehicle.date = {
